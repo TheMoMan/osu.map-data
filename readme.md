@@ -1,0 +1,3 @@
+# osu.map-data
+
+Curious. 
