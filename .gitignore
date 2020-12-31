@@ -1,0 +1,8 @@
+__pycache__
+.vscode
+
+sandbox.py
+mapdata.db
+
+/testFiles
+/maps
