@@ -1,9 +1,8 @@
-import app.lib.objects as objects
-import app.lib.beatmap as beatmap
 import sqlite3
 import os
-import parseOsu
 import time
+from app import parseOsu
+from app.lib import objects, beatmap
 
 ###
 pathToMaps = 'testFiles/'
@@ -67,6 +66,6 @@ for file in files:
         c.execute('REPLACE INTO objects values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', hitObject)
       
       if hitObject[2] == 'spinner':
-        c.execute('REPLACE INTO objects (object_number, beatmap_id, type, time, x, y, length, new_combo) values (?, ?, ?, ?, ?, ?, ?, ?);', hitObject)
+        c.execute('REPLACE INTO objects (object_number, beatmap_id, type, time, x, y, new_combo, length) values (?, ?, ?, ?, ?, ?, ?, ?);', hitObject)
 
 print('Finished in {}'.format(time.time() - timeStart))

@@ -1,4 +1,4 @@
-import utils
+from app import utils
 
 sliderCurveTypes = {
   'B' : 'bezier',
@@ -67,11 +67,11 @@ def parseObject(objectLine: str, objectNumber: int, beatmapId: int):
 
     anchorProps = parseSliderAnchors(objectProps[5])
 
-    return (objectNumber, beatmapId, 'slider', objectProps[2], objectProps[0], objectProps[1], anchorProps[1], objectProps[7], anchorProps[0], objectProps[6], objectType[1])
+    return (objectNumber, beatmapId, 'slider', objectProps[2], objectProps[0], objectProps[1], objectType[1], anchorProps[1], objectProps[7], anchorProps[0], objectProps[6])
   
   elif objectType[0] == 'spinner':
     # x,y,time,type,hitSound,endTime,hitSample
 
     spinnerLength = str(int(objectProps[5]) - int(objectProps[2]))
 
-    return (objectNumber, beatmapId, 'spinner', objectProps[2], objectProps[0], objectProps[1], spinnerLength, objectType[1])
+    return (objectNumber, beatmapId, 'spinner', objectProps[2], objectProps[0], objectProps[1], objectType[1], spinnerLength)

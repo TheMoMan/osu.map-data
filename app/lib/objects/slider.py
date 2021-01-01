@@ -13,4 +13,4 @@ class Slider(HitObject):
     return 'objectNumber: {}, mapId: {}, time: {}, x: {}, y: {}, newCombo: {}, length: {}, anchors: {}, curveType: {}, slides: {}'.format(self.objectNumber, self.mapId, self.time, self.x, self.y, self.newCombo, self.length, self.anchors, self.curveType, self.slides)
 
   def toSqlRow(self):
-    return (self.objectNumber, self.mapId, 'slider', self.time, self.x, self.y, '|'.join(self.anchors.toSqlField()), self.length, self.curveType, self.slides, self.newCombo)
+    return (self.objectNumber, self.mapId, 'slider', self.time, self.x, self.y, self.newCombo, '|'.join(self.anchors.toSqlField()), self.length, self.curveType, self.slides)
