@@ -1,5 +1,7 @@
--- Finds the most common circle by x and y
-SELECT time, x, y, type, COUNT(*) as freq FROM objects
+-- Finds the most common circle by coordinates
+
+SELECT x, y, type, COUNT(*) as freq FROM objects
+WHERE type = 'circle'
 GROUP BY x, y
 HAVING freq = (
   SELECT MAX(freq)
