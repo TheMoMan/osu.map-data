@@ -5,7 +5,7 @@ from app import parseOsu
 from app.lib import objects, beatmap
 
 ###
-pathToMaps = 'testFiles/'
+pathToMaps = 'maps/'
 ###
 
 timeStart = time.time()
@@ -21,7 +21,7 @@ for file in files:
   fileNumber += 1
   print('Processing map {} of {}'.format(fileNumber, numberOfFiles))
 
-  path = 'testFiles/{}'.format(file)
+  path = pathToMaps + file
 
   with open(path, 'r') as f:
     beatmap = [line.rstrip() for line in f]
