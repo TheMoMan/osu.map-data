@@ -18,3 +18,9 @@ def getRightOfColon(string: str):
 
 def getFileNameNoExt(string: str):
   return string.split('.')[0]
+
+def log(msg: str):
+  with open('log.txt', 'a') as f:
+    f.write(msg + '\n')
+  
+  print(msg)

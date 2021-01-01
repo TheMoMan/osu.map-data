@@ -3,6 +3,7 @@ import os
 import time
 from app import parseOsu
 from app.lib import objects, beatmap
+from app.utils import log
 
 ###
 pathToMaps = 'maps/'
@@ -27,12 +28,13 @@ for file in files:
     beatmap = [line.rstrip() for line in f]
   
   if len(beatmap) == 0:
+    log('Skipped {} as file was empty'.format(file))
     continue
 
   # Skip non-standard gamemodes for now
   mode = parseOsu.getMode(beatmap)
   if mode != '0':
-    print('Skipped {} as not osu! standard gamemode'.format(file))
+    log('Skipped {} as not osu! standard gamemode'.format(file))
     continue
 
   # Add Mapset Data
@@ -42,7 +44,7 @@ for file in files:
     with conn:
       c.execute('INSERT INTO beatmap_sets values (?, ?, ?, ?, ?, ?, ?, ?);', mapsetData)
   except sqlite3.IntegrityError:
-    print('Skipped adding new mapset for {}'.format(file))
+    log('Skipped adding new mapset for {}'.format(file))
   
   # Add Map Data
   mapData = parseOsu.parseMapData(beatmap, file)
@@ -52,14 +54,14 @@ for file in files:
     with conn:
       c.execute('INSERT INTO beatmaps values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', mapData)
   except sqlite3.IntegrityError:
-    print('Skipped adding new map for {}'.format(file))
+    log('Skipped adding new map for {}'.format(file))
     continue
 
   # Add Map Objects
   try:
     index = beatmap.index('[HitObjects]')
   except ValueError:
-    print('Skipped adding objects for {}, cannot find objects'.format(file))
+    log('Skipped adding objects for {}, cannot find objects'.format(file))
 
   with conn:
     for i, objectLine in enumerate(beatmap[index+1:]):
@@ -74,4 +76,4 @@ for file in files:
       if hitObject[2] == 'spinner':
         c.execute('REPLACE INTO objects (object_number, beatmap_id, type, time, x, y, new_combo, length) values (?, ?, ?, ?, ?, ?, ?, ?);', hitObject)
 
-print('Finished in {}'.format(time.time() - timeStart))
+log('Finished in {}'.format(time.time() - timeStart))

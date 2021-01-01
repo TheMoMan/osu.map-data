@@ -1,10 +1,10 @@
 __pycache__
 .vscode
 
+*.db
 *.db-journal
-
 sandbox.py
-mapdata.db
+log.txt
 
 /testFiles
 /maps
