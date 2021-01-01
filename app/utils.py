@@ -15,3 +15,6 @@ def getRightOfColon(string: str):
     return string.split(':')[1].strip()
   except:
     return ''
+
+def getFileNameNoExt(string: str):
+  return string.split('.')[0]

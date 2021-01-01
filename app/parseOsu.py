@@ -1,3 +1,4 @@
+import hashlib
 from app import utils
 
 sliderCurveTypes = {
@@ -10,8 +11,20 @@ sliderCurveTypes = {
 def getMetadataValue(beatmapLines: [str], field: str):
   return utils.getRightOfColon(utils.getElementFromPartial(beatmapLines, field))
 
+def hashMetadata(beatmapLines: [str]):
+  # Old .osu formats don't stop beatmapSetId, so when this happens
+  # we use the hash of artist + title + creator as a substitute.
+  # Note this creates inaccuracies if a creator has two mapsets with the same artist + title.
+
+  artist = getMetadataValue(beatmapLines, 'Artist')
+  title = getMetadataValue(beatmapLines, 'Title')
+  creator = getMetadataValue(beatmapLines, 'Creator')
+
+  a = artist + title + creator;
+
+  return hashlib.md5(a.encode()).hexdigest()
+
 def parseMapsetData(beatmapLines: [str]):
-  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID')
   title = getMetadataValue(beatmapLines, 'Title')
   titleUnicode = getMetadataValue(beatmapLines, 'TitleUnicode')
   artist = getMetadataValue(beatmapLines, 'Artist')
@@ -20,11 +33,15 @@ def parseMapsetData(beatmapLines: [str]):
   source = getMetadataValue(beatmapLines, 'Source')
   tags = getMetadataValue(beatmapLines, 'Tags')
 
+  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID') or hashMetadata(beatmapLines)
+
   return (beatmapSetId, title, titleUnicode, artist, artistUnicode, creator, source, tags)
 
-def parseMapData(beatmapLines: [str]):
-  beatmapId = getMetadataValue(beatmapLines, 'BeatmapID')
-  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID')
+def parseMapData(beatmapLines: [str], fileName: str):
+  # Old .osu formats don't store beatmapId, take it from file name instead.
+  # Means we can only use data from data.ppy.sh though.
+  beatmapId = utils.getFileNameNoExt(fileName)
+
   mode = getMetadataValue(beatmapLines, 'Mode')
   version = getMetadataValue(beatmapLines, 'Version')
   hpDrain = getMetadataValue(beatmapLines, 'HPDrainRate')
@@ -35,10 +52,12 @@ def parseMapData(beatmapLines: [str]):
   sliderTickRate = getMetadataValue(beatmapLines, 'SliderTickRate')
   stackLeniency = getMetadataValue(beatmapLines, 'StackLeniency')
 
+  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID') or hashMetadata(beatmapLines)
+
   return (beatmapId, beatmapSetId, mode, version, hpDrain, circleSize, overallDifficulty, approachRate, sliderMultiplier, sliderTickRate, stackLeniency)
 
 def getMode(beatmapLines: [str]):
-  return getMetadataValue(beatmapLines, 'Mode')
+  return getMetadataValue(beatmapLines, 'Mode') or '0'
 
 def getObjectType(objectProps: [str]):
   objectTypeBin = '{0:07b}'.format(int(objectProps[3]))

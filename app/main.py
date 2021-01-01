@@ -19,13 +19,16 @@ fileNumber = 0
 
 for file in files:
   fileNumber += 1
-  print('Processing map {} of {}'.format(fileNumber, numberOfFiles))
+  print('Processing map {} of {} ({})'.format(fileNumber, numberOfFiles, file))
 
   path = pathToMaps + file
 
   with open(path, 'r') as f:
     beatmap = [line.rstrip() for line in f]
   
+  if len(beatmap) == 0:
+    continue
+
   # Skip non-standard gamemodes for now
   mode = parseOsu.getMode(beatmap)
   if mode != '0':
@@ -42,7 +45,7 @@ for file in files:
     print('Skipped adding new mapset for {}'.format(file))
   
   # Add Map Data
-  mapData = parseOsu.parseMapData(beatmap)
+  mapData = parseOsu.parseMapData(beatmap, file)
   beatmapId = mapData[0]
 
   try:
@@ -53,7 +56,10 @@ for file in files:
     continue
 
   # Add Map Objects
-  index = beatmap.index('[HitObjects]')
+  try:
+    index = beatmap.index('[HitObjects]')
+  except ValueError:
+    print('Skipped adding objects for {}, cannot find objects'.format(file))
 
   with conn:
     for i, objectLine in enumerate(beatmap[index+1:]):

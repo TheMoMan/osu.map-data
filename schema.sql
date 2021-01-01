@@ -1,5 +1,5 @@
 CREATE TABLE "beatmap_sets"(
-  beatmap_set_id integer primary key,
+  beatmap_set_id text primary key,
   title text not null,
   title_unicode text not null,
   artist text not null,
@@ -10,7 +10,7 @@ CREATE TABLE "beatmap_sets"(
 );
 CREATE TABLE IF NOT EXISTS "beatmaps"(
   beatmap_id integer primary key,
-  beatmap_set_id integer not null,
+  beatmap_set_id text not null,
   mode integer not null,
   difficulty_name text not null,
   hp_drain real not null,
