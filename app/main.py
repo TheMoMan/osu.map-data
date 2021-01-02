@@ -20,7 +20,7 @@ fileNumber = 0
 
 for file in files:
   fileNumber += 1
-  print('Processing map {} of {} ({})'.format(fileNumber, numberOfFiles, file))
+  log('Processing map {} of {} ({})'.format(fileNumber, numberOfFiles, file))
 
   path = pathToMaps + file
 
@@ -62,10 +62,15 @@ for file in files:
     index = beatmap.index('[HitObjects]')
   except ValueError:
     log('Skipped adding objects for {}, cannot find objects'.format(file))
+    continue
 
   with conn:
     for i, objectLine in enumerate(beatmap[index+1:]):
-      hitObject = parseOsu.parseObject(objectLine, i, beatmapId)
+      try:
+        hitObject = parseOsu.parseObject(objectLine, i, beatmapId)
+      except:
+        log('Couldn\'t parse object number {} for {}'.format(i, file))
+        continue
 
       if hitObject[2] == 'circle':
         c.execute('REPLACE INTO objects (object_number, beatmap_id, type, time, x, y, new_combo) values (?, ?, ?, ?, ?, ?, ?);', hitObject)
