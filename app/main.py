@@ -7,16 +7,20 @@ from app.utils import log
 
 ###
 pathToMaps = 'maps/'
+databaseFile = 'mapdata3.db'
 ###
 
 timeStart = time.time()
 
-conn = sqlite3.connect('mapdata.db')
-c = conn.cursor()
+conn = sqlite3.connect(databaseFile)
 
 files = [file for file in os.listdir(pathToMaps)]
 numberOfFiles = len(files)
 fileNumber = 0
+
+circles = []
+sliders = []
+spinners = []
 
 for file in files:
   fileNumber += 1
@@ -24,8 +28,12 @@ for file in files:
 
   path = pathToMaps + file
 
-  with open(path, 'r') as f:
-    beatmap = [line.rstrip() for line in f]
+  try:
+    with open(path, 'r') as f:
+      beatmap = [line.rstrip() for line in f]
+  except:
+    log('Couldn\'t read file {}, check encoding?'.format(file))
+    continue
   
   if len(beatmap) == 0:
     log('Skipped {} as file was empty'.format(file))
@@ -42,7 +50,7 @@ for file in files:
 
   try:
     with conn:
-      c.execute('INSERT INTO beatmap_sets values (?, ?, ?, ?, ?, ?, ?, ?);', mapsetData)
+      conn.execute('INSERT INTO beatmap_sets values (?, ?, ?, ?, ?, ?, ?, ?);', mapsetData)
   except sqlite3.IntegrityError:
     log('Skipped adding new mapset for {}'.format(file))
   
@@ -52,7 +60,7 @@ for file in files:
 
   try:
     with conn:
-      c.execute('INSERT INTO beatmaps values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', mapData)
+      conn.execute('INSERT INTO beatmaps values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', mapData)
   except sqlite3.IntegrityError:
     log('Skipped adding new map for {}'.format(file))
     continue
@@ -64,21 +72,36 @@ for file in files:
     log('Skipped adding objects for {}, cannot find objects'.format(file))
     continue
 
-  with conn:
-    for i, objectLine in enumerate(beatmap[index+1:]):
-      try:
-        hitObject = parseOsu.parseObject(objectLine, i, beatmapId)
-      except:
-        log('Couldn\'t parse object number {} for {}'.format(i, file))
-        continue
+  for i, objectLine in enumerate(beatmap[index+1:]):
+    try:
+      hitObject = parseOsu.parseObject(objectLine, i, beatmapId)
+    except:
+      log('Couldn\'t parse object number {} for {}'.format(i, file))
+      continue
 
-      if hitObject[2] == 'circle':
-        c.execute('REPLACE INTO objects (object_number, beatmap_id, type, time, x, y, new_combo) values (?, ?, ?, ?, ?, ?, ?);', hitObject)
-      
-      if hitObject[2] == 'slider':
-        c.execute('REPLACE INTO objects values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', hitObject)
-      
-      if hitObject[2] == 'spinner':
-        c.execute('REPLACE INTO objects (object_number, beatmap_id, type, time, x, y, new_combo, length) values (?, ?, ?, ?, ?, ?, ?, ?);', hitObject)
+    if hitObject[2] == 'circle':
+      circles.append(hitObject)
+    
+    if hitObject[2] == 'slider':
+      sliders.append(hitObject)
+  
+    if hitObject[2] == 'spinner':
+      spinners.append(hitObject)
+
+  # Batch insert
+  if fileNumber % 5000 == 0 or fileNumber == numberOfFiles:
+    with conn:
+      log('Inserting circles...')
+      conn.executemany('INSERT INTO objects (object_number, beatmap_id, type, time, x, y, new_combo) VALUES (?, ?, ?, ?, ?, ?, ?);', circles)
+
+      log('Inserting sliders...')
+      conn.executemany('INSERT INTO objects VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', sliders)
+
+      log('Inserting spinners...')
+      conn.executemany('INSERT INTO objects (object_number, beatmap_id, type, time, x, y, new_combo, length) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', spinners)
+
+    circles = []
+    sliders = []
+    spinners = []
 
 log('Finished in {}'.format(time.time() - timeStart))
