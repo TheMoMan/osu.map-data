@@ -33,7 +33,9 @@ def parseMapsetData(beatmapLines: [str]):
   source = getMetadataValue(beatmapLines, 'Source')
   tags = getMetadataValue(beatmapLines, 'Tags')
 
-  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID') or hashMetadata(beatmapLines)
+  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID')
+  if str(beatmapSetId) in ['', '-1']:
+    beatmapSetId = hashMetadata(beatmapLines)
 
   return (beatmapSetId, title, titleUnicode, artist, artistUnicode, creator, source, tags)
 
@@ -52,7 +54,9 @@ def parseMapData(beatmapLines: [str], fileName: str):
   sliderTickRate = getMetadataValue(beatmapLines, 'SliderTickRate')
   stackLeniency = getMetadataValue(beatmapLines, 'StackLeniency')
 
-  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID') or hashMetadata(beatmapLines)
+  beatmapSetId = getMetadataValue(beatmapLines, 'BeatmapSetID')
+  if str(beatmapSetId) in ['', '-1']:
+    beatmapSetId = hashMetadata(beatmapLines)
 
   return (beatmapId, beatmapSetId, mode, version, hpDrain, circleSize, overallDifficulty, approachRate, sliderMultiplier, sliderTickRate, stackLeniency)
 

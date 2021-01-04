@@ -6,8 +6,8 @@ from app.lib import objects, beatmap
 from app.utils import log
 
 ###
-pathToMaps = 'maps/'
-databaseFile = 'mapdata3.db'
+pathToMaps = 'testFiles/'
+databaseFile = 'mapdata.db'
 ###
 
 timeStart = time.time()
