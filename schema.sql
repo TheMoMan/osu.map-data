@@ -1,4 +1,4 @@
-CREATE TABLE "beatmap_sets"(
+CREATE TABLE IF NOT EXISTS "beatmap_sets"(
   beatmap_set_id text primary key,
   title text not null,
   title_unicode text not null,
@@ -39,3 +39,4 @@ CREATE TABLE IF NOT EXISTS "objects"(
   FOREIGN KEY(beatmap_id)
     REFERENCES beatmaps (beatmap_id)
 );
+CREATE TABLE IF NOT EXISTS 'beatmaps_web' (beatmap_id integer primary key, status text not null, foreign key (beatmap_id) references beatmaps (beatmap_set_id));
