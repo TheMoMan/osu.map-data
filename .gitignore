@@ -3,6 +3,7 @@ __pycache__
 
 *.db
 *.db-journal
+*.csv
 sandbox.py
 log.txt
 

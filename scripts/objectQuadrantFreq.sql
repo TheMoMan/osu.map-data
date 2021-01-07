@@ -1,5 +1,7 @@
 -- Gets frequency of an object being placed in each quadrant
 
+.once scripts/out/objectQuadrantFreq.txt
+
 SELECT
   CASE
     WHEN x < 256 AND y < 192 THEN 'topLeft'

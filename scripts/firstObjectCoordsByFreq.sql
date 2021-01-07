@@ -1,10 +1,19 @@
--- List coordinates of the first object of a map sorted by frequency
+-- List coordinates of the first non-spinner object of a map sorted by frequency
 
 .once scripts/out/firstObjectCoordsByFreq.txt
 
 SELECT x, y, COUNT(*) as freq
-FROM objects
-WHERE object_number = 0
+FROM (
+  SELECT beatmap_id, x, y, MIN(object_number)
+  FROM objects
+  WHERE type != 'spinner'
+  GROUP BY beatmap_id
+)
+WHERE
+  beatmap_id NOT IN (
+    SELECT beatmap_id
+    FROM beatmaps_web
+    WHERE status = 'loved'
+  )
 GROUP BY x, y
-ORDER BY freq DESC
-LIMIT 1000;
+ORDER BY freq DESC;

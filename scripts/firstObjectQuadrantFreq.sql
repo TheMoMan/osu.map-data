@@ -1,4 +1,6 @@
--- Gets frequency of the first object in a map being placed in each quadrant
+-- Gets frequency of the first non-spinner object in a map being placed in each quadrant
+
+.once scripts/out/firstObjectQuadrantFreq.txt
 
 SELECT
   CASE
@@ -14,7 +16,17 @@ SELECT
     ELSE '???'
   END as quadrant,
   COUNT(*) as freq
-FROM objects
-WHERE object_number = 0
+FROM (
+  SELECT beatmap_id, x, y, MIN(object_number)
+  FROM objects
+  WHERE type != 'spinner'
+  GROUP BY beatmap_id
+)
+WHERE
+  beatmap_id NOT IN (
+    SELECT beatmap_id
+    FROM beatmaps_web
+    WHERE status = 'loved'
+  )
 GROUP BY quadrant
 ORDER BY freq DESC
