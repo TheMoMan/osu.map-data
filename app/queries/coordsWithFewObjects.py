@@ -13,20 +13,24 @@ c = conn.cursor()
 c.execute('''
   SELECT x, y, COUNT(*) as freq
   FROM objects
-  GROUP BY x, y
-  ORDER BY freq DESC;
+  WHERE beatmap_id NOT IN (
+    SELECT beatmap_id
+    FROM beatmaps_web
+    WHERE status = 'loved'
+  )
+  GROUP BY x, y;
 ''')
 
 print('Updating coords...')
 for row in c:
   try:
-    coords[int(row['x'])][int(row['y'])] = int(row['freq'])
+    coords[row['x']][row['y']] = int(row['freq'])
   except:
     print('skipped {} {}'.format(row['x'], row['y']))
 
 print('Getting...')
 for x, ys in enumerate(coords):
-  lows = [[y, freq] for y, freq in enumerate(ys) if freq < 3]
+  lows = [[y, freq] for y, freq in enumerate(ys) if freq < 4]
 
   if len(lows) > 0:
     for y, freq in lows:
