@@ -2,14 +2,18 @@
 
 .once scripts/out/listMapsWithObject.txt
 
-SELECT artist, title, difficulty_name, creator, COUNT(*) as freq
+SELECT beatmaps.beatmap_id, artist, title, difficulty_name, creator, COUNT(*) as freq
 FROM
   objects
   INNER JOIN beatmaps ON beatmaps.beatmap_id = objects.beatmap_id
   INNER JOIN beatmap_sets on beatmap_sets.beatmap_set_id = beatmaps.beatmap_set_id
 WHERE
       x = 256
-  AND y = 192
-  AND type != 'spinner'
-GROUP BY artist, title, difficulty_name, creator
-LIMIT 1000
+  -- AND y = 192
+  -- AND type = 'circle'
+  AND beatmaps.beatmap_id NOT IN (
+    SELECT beatmap_id
+    FROM beatmaps_web
+    WHERE status = 'loved'
+  )
+GROUP BY beatmaps.beatmap_id

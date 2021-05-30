@@ -1,5 +1,7 @@
 -- List coordinates of the first non-spinner object of a map sorted by frequency
 
+-- .output csv
+-- .once scripts/out/firstObjectCoordsByFreq.csv
 .once scripts/out/firstObjectCoordsByFreq.txt
 
 SELECT x, y, COUNT(*) as freq

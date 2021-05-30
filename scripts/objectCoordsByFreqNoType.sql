@@ -1,8 +1,8 @@
 -- List coordinates of all objects sorted by frequency
 
 .headers on
-.mode csv
-.once scripts/out/objectCoordsByFreqNoType.csv
+-- .mode csv
+.once scripts/out/objectCoordsByFreqNoType.txt
 
 SELECT x, y, COUNT(*) as freq
 FROM objects

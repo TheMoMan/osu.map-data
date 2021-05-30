@@ -6,7 +6,7 @@ from app.lib import objects, beatmap
 from app.utils import log
 
 ###
-pathToMaps = 'testFiles/'
+pathToMaps = 'maps/'
 databaseFile = 'mapdata.db'
 ###
 
