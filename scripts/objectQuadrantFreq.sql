@@ -1,5 +1,6 @@
 -- Gets frequency of an object being placed in each quadrant
 
+.width 12 12
 .once scripts/out/objectQuadrantFreq.txt
 
 SELECT

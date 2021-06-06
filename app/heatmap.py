@@ -11,13 +11,13 @@ timeStart = time.time()
 
 print('Reading...')
 
-with open('scripts/out/firstObjectCoords.csv', 'r') as f:
-  next(f)
-  lines = f.readlines()
-
-# with open('scripts/out/objectCoords.csv', 'r') as f:
+# with open('scripts/out/firstObjectCoords.csv', 'r') as f:
 #   next(f)
 #   lines = f.readlines()
+
+with open('scripts/out/objectCoords.csv', 'r') as f:
+  next(f)
+  lines = f.readlines()
 
 data = [line.split(',') for line in lines]
 

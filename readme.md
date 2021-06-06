@@ -39,7 +39,7 @@ Hopefully most of these tables and columns should be self-explanatory.
 | ------ | --------- | -------- | ----- |
 | beatmap_id | integer | primary key | Very old beatmaps didn't store the beatmap id in the .osu, so for these cases we use the file name the map was read from. |
 | beatmap_set_id | text | not null, foreign key | |
-| mode | integer | not null | We're only processing standard mode maps for now |
+| mode | integer | not null | Can only be `0`. We're only processing standard mode maps for now |
 | difficulty_name | text | not null | |
 | hp_drain | real | not null | |
 | circle_size | real | not null | |
