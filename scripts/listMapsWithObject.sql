@@ -11,6 +11,7 @@ WHERE
       x = 256
   -- AND y = 192
   -- AND type = 'circle'
+  -- AND time = 248234
   AND beatmaps.beatmap_id NOT IN (
     SELECT beatmap_id
     FROM beatmaps_web

@@ -17,6 +17,13 @@ SELECT
     ELSE '???'
   END as quadrant,
   COUNT(*) as freq
-FROM objects
+FROM
+  objects
+  -- INNER JOIN beatmaps ON beatmaps.beatmap_id = objects.beatmap_id
+WHERE objects.beatmap_id NOT IN (
+    SELECT beatmap_id
+    FROM beatmaps_web
+    WHERE status = 'loved'
+  )
 GROUP BY quadrant
 ORDER BY freq DESC

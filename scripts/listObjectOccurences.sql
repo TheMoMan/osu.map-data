@@ -1,6 +1,6 @@
 -- List occurences of a given object
 
-.width 7 8 32 32 16 16
+.width 7 8 10 20 20 16 16
 
 -- .once scripts/out/listObjectOccurences.txt
 
@@ -10,10 +10,10 @@ FROM
   INNER JOIN beatmaps ON beatmaps.beatmap_id = objects.beatmap_id
   INNER JOIN beatmap_sets on beatmap_sets.beatmap_set_id = beatmaps.beatmap_set_id
 WHERE
-      x = 11
+  x = 12
       -- AND x < 65
   AND y = 1
-  -- AND time = 248234
+  -- AND time = 3834
   -- AND type = 'circle' 
   -- AND objects.beatmap_id = 256499
   AND beatmaps.beatmap_id NOT IN (
