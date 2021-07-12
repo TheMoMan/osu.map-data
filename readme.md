@@ -6,6 +6,9 @@ The code is a bit of a bodge job so some things like the query scripts might not
 
 Thanks to [Mr HeliX](https://osu.ppy.sh/users/2330619) for providing a list of loved beatmap IDs.
 
+### Videos
+[This is the most common circle in osu!](https://youtu.be/bOLI0pVpfy)
+
 ## Setting up
 
 You should probably have Python installed for this, I used 3.9. Sqlite3 is probably a good idea too.
