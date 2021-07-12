@@ -15,7 +15,7 @@ You should probably have Python installed for this, I used 3.9. Sqlite3 is proba
 
 - Clone this repository and navigate to it using your favourite command line interface with `cd osu.map-data`
 - Create a new database file with `sqlite3 mapdata.db` and then set up the tables with `.read schema.sql`. Press `Ctrl+D` to close the database when you're done.
-- Create a new directory named `maps` and add your .ose files in here. If you need a dump of all ranked and loved .osu files you can get them from https://data.ppy.sh/.
+- Create a new directory named `maps` and add your .osu files in here. If you need a dump of all ranked and loved .osu files you can get them from https://data.ppy.sh/.
 - Run `python3 run.py` to start reading and adding maps to the database. This will probably take some time (took me around an hour for the entire data dump), and will create a database file around 2GB in size.
 
 When you're done you should have a database with four tables you're free to play around with.
